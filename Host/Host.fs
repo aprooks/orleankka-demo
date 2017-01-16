@@ -5,36 +5,6 @@ open System.Net
 
 open FSharp.Data
 
-open Microsoft.Azure.Documents
-open Microsoft.Azure.Documents.Client
-
-
-// Connect to the DocumentDB Emulator running locally
-
-module Root = 
-    let docDbUri = new Uri("https://localhost:8081")
-    let docDbApiKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw=="
-
-module DocumentDb =
-
-    let client = new DocumentClient(Root.docDbUri, Root.docDbApiKey)
-    
-    let createDb (dbName:string) (client:DocumentClient) = 
-        let db = new Database()
-        db.Id <- dbName.ToLower()
-        client.CreateDatabaseIfNotExistsAsync(db,new RequestOptions())
-        |> Async.AwaitTask
-
-    let createCollection (collectionName:string) (db: Database) (client:DocumentClient)= 
-        let collection = new DocumentCollection()
-        collection.Id<-collectionName.ToLower()
-        client.CreateDocumentCollectionIfNotExistsAsync(db.CollectionsLink,collection,new RequestOptions())
-        |> Async.AwaitTask
-
-    let upsert (doc:obj) (collection:DocumentCollection) (client:DocumentClient) = 
-        client.UpsertDocumentAsync(collection.DocumentsLink, doc)
-        |> Async.AwaitTask
-
 open DocumentDb
 
 type Id = string
