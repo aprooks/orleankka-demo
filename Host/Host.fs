@@ -11,11 +11,13 @@ open Microsoft.Azure.Documents.Client
 
 // Connect to the DocumentDB Emulator running locally
 
+module Root = 
+    let docDbUri = new Uri("https://localhost:8081")
+    let docDbApiKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw=="
+
 module DocumentDb =
 
-    let client = new DocumentClient(
-                    new Uri("https://localhost:8081"), 
-                    "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==")
+    let client = new DocumentClient(Root.docDbUri, Root.docDbApiKey)
     
     let createDb (dbName:string) (client:DocumentClient) = 
         let db = new Database()
