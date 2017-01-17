@@ -4,3 +4,4 @@ nuget FSharp.Core
 nuget FSharp.Data
 nuget Microsoft.Azure.DocumentDB
 nuget newtonsoft.json
+nuget Orleankka.FSharp.Runtime prerelease
