@@ -60,11 +60,10 @@ module Org =
         let mutable s = {id = ""; name=""; adminEmail  = "";createdAt = DateTime.Now}
 
         override this.Activate () = 
-            printfn "activated with base.id %s" base.Id
-            let id = base.Id
+            // let id = base.Id
             task {
-                printfn "activated with %s" id
-                let! doc = loadState id
+                printfn "activated with %s" this.Id
+                let! doc = loadState this.Id
                 match doc with
                 | Some state ->
                     s <- state
@@ -73,15 +72,13 @@ module Org =
 
         override this.Receive msg = 
             printfn "recieved msg of %s" (msg.GetType().ToString())
-            let id = base.Id
             task {
                 match msg with 
                 | Create (name,adminEmail) -> 
                     if s.id <> "" then
                         failwith "cannot create twice"
-
                     let! result = {
-                                            id = id
+                                            id = this.Id
                                             name = name
                                             adminEmail = adminEmail
                                             createdAt = System.DateTime.Now
