@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Root.fs" />
     <Compile Include="DocumentDb.fs" />
+    <Compile Include="Org.fs" />
     <Compile Include="Host.fs" />
     <None Include="App.config" />
   </ItemGroup>
