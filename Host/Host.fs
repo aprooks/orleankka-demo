@@ -41,10 +41,18 @@ let TestDocumentDb ()= task {
 }
 
 let ScaffoldGrains (system:IActorSystem) ()= task{
-   let actor = ActorSystem.actorOf<Org.Organization>(system, "actor_id")
-   
-   do! actor <! Org.Create("test","admin@example.com")
+   let actor = ActorSystem.actorOf<Org.Organization>(system, "test_id")
+   printfn "loading state"
+   let! state = actor.Ask<Org.State> Org.GetState
+
+   printfn "loaded state with id: %s" state.name
+
+   try
+       do! actor <! Org.Create("test_id", "test","admin@example.com")
+   with
+   | :? Exception as ex -> printfn "creation failed with ex: %s" ex.Message
 }
+
 open System.Threading.Tasks
 
 [<EntryPoint>]
@@ -69,6 +77,6 @@ let main argv =
         |> Task.run 
     match res with 
     | Choice1Of2 _ -> printfn "scaffolding complete"
-    | Choice2Of2 exn -> printfn "exeption on scaffolding:\n %s\n %s" exn.Message exn.StackTrace
+    | Choice2Of2 exn -> printfn "exeption on scaffolding:\n %s\n %s \n %s" exn.Message exn.StackTrace (exn.InnerException.ToString())
 
     0 // return an integer exit code
