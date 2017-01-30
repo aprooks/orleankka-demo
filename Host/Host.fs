@@ -78,5 +78,6 @@ let main argv =
     match res with 
     | Choice1Of2 _ -> printfn "scaffolding complete"
     | Choice2Of2 exn -> printfn "exeption on scaffolding:\n %s\n %s \n %s" exn.Message exn.StackTrace (exn.InnerException.ToString())
-
+    
+    Console.ReadLine() |> ignore
     0 // return an integer exit code
