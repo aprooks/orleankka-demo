@@ -63,8 +63,11 @@ let handle state =
         else
             { state with disabled = true }
 
+
+
 open Orleankka.Services
 open Orleankka.FSharp.Configuration
+open State
 
 let runDisactivationReminder (reminders:IReminderService ) command state = task {
     match command with 
@@ -78,23 +81,7 @@ let runDisactivationReminder (reminders:IReminderService ) command state = task 
         | _ -> ignore()
     return state
 }
-let loadState id = task {
-        let! db = createDb "actors" DocumentDb.client
-        let! coll = createCollection "states" db.Resource DocumentDb.client
-        let! state = loadDocument id coll.Resource db.Resource DocumentDb.client
-        return match state with
-                | Some doc -> 
-                                JsonConvert.DeserializeObject<State>(doc.Resource.ToString())
-                                |> Some
-                | None -> None 
-}
 
-let uploadState state = task{
-        let! db = createDb "actors" DocumentDb.client
-        let! coll = createCollection "states" db.Resource DocumentDb.client
-        let! result = upsert state coll.Resource DocumentDb.client
-        return state
-}
 
 type Organization()=
     inherit Actor<Contract>()
