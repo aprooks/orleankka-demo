@@ -18,7 +18,7 @@ type TestDoc ={
 }
 
 open DocumentDb
-
+open Microsoft.Azure.Documents.Client
 let TestDocumentDb ()= task {
     let! dbResponse = createDb "test" DocumentDb.client
     
@@ -27,15 +27,16 @@ let TestDocumentDb ()= task {
     let! upsertResult = upsert {id="Hello1"; name="World"} collection.Resource DocumentDb.client
     printfn "upserted doc %A" upsertResult.Resource.Id   
 
+    let printLoadResult (res:ResourceResponse<Microsoft.Azure.Documents.Document> option) =
+        match res with
+        | Some d -> printfn "existingDoc loaded %A" d.Resource
+        | None -> printfn "failed to load doc"
+
     let! existingDoc = loadDocument "Hello1" collection.Resource dbResponse.Resource DocumentDb.client
-    match existingDoc with 
-    | Some d -> printfn "existingDoc loaded %A" d.Resource
-    | None -> printfn "failed to load doc"
-    
+    existingDoc |> printLoadResult
+
     let! nonExistingDoc = loadDocument "Hello2" collection.Resource dbResponse.Resource DocumentDb.client
-    match nonExistingDoc with 
-    | Some d -> printfn "existingDoc loaded %A" d.Resource
-    | None -> printfn "failed to load doc"
+    nonExistingDoc |> printLoadResult
 
     return nothing
 }
@@ -50,7 +51,7 @@ let ScaffoldGrains (system:IActorSystem) ()= task{
    try
        do! actor <! Org.Create("test_id", "test","admin@example.com")
    with
-   | :? Exception as ex -> printfn "creation failed with ex: %s" ex.Message
+   | ex -> printfn "creation failed with ex: %s" ex.Message
 }
 
 open System.Threading.Tasks
