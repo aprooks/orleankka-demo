@@ -119,4 +119,7 @@ type Organization()=
             s <- state
             return nothing
         | :? Queries as qry -> return response(s)
+        |_-> 
+            failwith "message type not supported" 
+            return nothing
     }

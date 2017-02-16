@@ -65,7 +65,7 @@ let main argv =
 
     printfn "starting actor system"
     
-    use system = [|System.Reflection.Assembly.GetExecutingAssembly()|]
+    let system = [|System.Reflection.Assembly.GetExecutingAssembly()|]
                 |> ActorSystem.createPlayground
                 |> ActorSystem.start   
     
@@ -80,4 +80,5 @@ let main argv =
     | Choice2Of2 exn -> printfn "exeption on scaffolding:\n %s\n %s \n %s" exn.Message exn.StackTrace (exn.InnerException.ToString())
     
     Console.ReadLine() |> ignore
+    
     0 // return an integer exit code
