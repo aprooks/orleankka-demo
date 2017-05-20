@@ -42,10 +42,6 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Root.fs" />
-    <Compile Include="DocumentDb.fs" />
-    <Compile Include="State.fs" />
-    <Compile Include="Org.fs" />
     <Compile Include="Host.fs" />
     <None Include="App.config" />
   </ItemGroup>
