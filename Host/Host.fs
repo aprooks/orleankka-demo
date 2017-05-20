@@ -24,6 +24,7 @@ module Pingers =
         }
 
 open Pingers
+open Wallets
 
 [<EntryPoint>]
 let main argv =
@@ -36,14 +37,32 @@ let main argv =
     printfn "actor system started"
 
  
-    fun _ -> task {
+    let ping() = task {
         let pinger =  ActorSystem.actorOf<Pinger>(system,"myId")
         let! res = pinger <? Ping
         printfn "received: %s" res //Pong
     } 
-    |> Task.run 
+    Task.run (ping) 
     |> ignore
 
+
+    let transfer() = task {
+        printfn "testing wallets"
+        let petia = ActorSystem.actorOf<Wallet>(system, "petia")
+        do! petia <! Deposit(10M)
+
+        let! balance = petia <? GetBalance
+        printfn "Petia balance is %M" balance
+
+
+        let vasia = ActorSystem.actorOf<Wallet>(system, "vasia")
+        do! petia <! TransferTo(vasia,5M)
+
+        let! balance = vasia <? GetBalance
+
+        printfn "Vasia balance is %M" balance
+    }
+    transfer |> Task.run |> ignore
     Console.ReadLine() |> ignore
     
     0 // return an integer exit code
